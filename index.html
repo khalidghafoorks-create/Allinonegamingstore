@@ -3,59 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LADLA DEAL STORE</title>
+<title>LADLA GAME STORE</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 </head>
-<body data-theme="1">
-<button id="installBtn">📲 Install App</button>
-<div id="popup">Payment Has Been Processing...</div>
-
-<div class="header" id="logoClickArea">
-<img id="storeLogo" src="icon-512.png">
-<div><b id="storeName">LADLA DEAL STORE</b><br><small id="storeTag">Instant UC • Diamonds • Coins</small></div>
+<body>
+<!-- 11. HEADER -->
+<div class="header" id="secretArea">
+<img id="logoImg" src="icon-512.png" class="logo">
+<div><div class="storeTitle" id="storeNameTxt">LADLA GAME STORE</div><div id="taglineTxt">Instant UC • Diamonds • Coins</div></div>
+<div class="live">● LIVE</div>
 </div>
 
-<div id="page1">
-<div class="banner" id="mainBanner"><h2>🔥 MEGA DEAL 🔥</h2><p>Sasta + Fast + Trusted</p></div>
-<div class="glass"><b>🕒 RECENTLY SOLD</b><div id="soldList"></div></div>
-<div class="glass"><b>🎮 ALL GAMES</b><div class="game-grid" id="gameList"></div></div>
-<div class="glass" id="gameDetail" style="display:none">
-<div style="display:flex;gap:10px;align-items:center"><img id="detailIcon" style="width:55px;height:55px;border-radius:12px"><div><b id="detailName">PUBG</b><br><small id="detailCoin">UC</small></div><button onclick="backToGames()" style="margin-left:auto;background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px">Back</button></div>
-<div style="margin-top:12px"><b>🎮 ENTER PLAYER ID</b><input id="uid" placeholder="UID likho"><button class="btn" onclick="verifyUID()">VERIFY UID ✅</button><div id="verifyResult"></div></div>
-<b>💎 CHOTA PACK</b><div id="smallPacks"></div>
-<b>🔥 BADA PACK - 25K SE 200K</b><div id="packs"></div>
-</div>
-<div class="glass" style="text-align:center"><b>🛡️ 100% TRUSTED</b><br><small>Payment: Card • Apple Pay • USDT • Bitcoin</small><br><small>Developed By Binrao</small></div>
+<!-- 12. MAIN BANNER + SEARCH + FILTERS -->
+<div class="banner" id="mainBanner"><div class="banner-dots" id="bannerDots"></div><div id="bannerText"><h2>🔥 MEGA DEAL 🔥</h2><p>Sasta + Fast + Trusted</p></div></div>
+<input id="search" placeholder="🔍 Search Game..." oninput="renderAll()">
+<div class="filterBar" id="filterBar"></div>
+
+<!-- 13. MAIN PAGE -->
+<div id="mainPage">
+<h3>🔥 Trending Now</h3><div class="grid" id="trendingGrid"></div>
+<h3>🎮 All Games</h3><div class="grid" id="allGrid"></div>
 </div>
 
-<div id="page2" style="display:none">
-<div class="glass"><b>🧾 ORDER DETAIL</b><div id="orderInfo"></div></div>
-<div class="glass"><b>💳 PAYMENT METHOD</b><div id="payMethods"></div></div>
-<div class="glass" id="cardBox"><b>CARD DETAIL</b><input id="cardNo" placeholder="Card Number"><input id="cardExp" placeholder="MM/YY"><input id="cardCVC" placeholder="CVC"><button class="btn" onclick="startPay()">PAY NOW 💳</button></div>
-<div class="glass" id="cryptoBox" style="display:none"><b id="cryptoTitle">USDT</b><p id="cryptoAddr"></p><button class="btn" onclick="startPay()">I HAVE SENT ✅</button></div>
-<button class="btn" onclick="goPage(1)" style="margin-top:10px;background:#333">BACK</button>
+<!-- SETTINGS - 14 TO 23 -->
+<div id="settingsPanel" style="display:none">
+<h2>⚙️ HIDDEN SETTINGS</h2><button class="btn-red" onclick="lockSettings()">CLOSE ❌</button>
+<!-- 14 -->
+<div class="card"><b>14. STORE NAME</b><label>Store Name</label><input id="sStoreName"><label>Tagline</label><input id="sTagline"><button class="btn-green" onclick="updateStoreNameUI()">SAVE STORE NAME</button></div>
+<!-- 15 -->
+<div class="card"><b>15. MAIN BANNERS</b><input type="file" accept="image/*" onchange="uploadBanner(event)"><div id="bannerList"></div><button class="btn-green" onclick="saveBanners()">SAVE MAIN BANNERS</button><button class="btn-red" onclick="clearBanners()">Delete All</button></div>
+<!-- 16 -->
+<div class="card"><b>16. ORDERS + DEFAULT STATUS</b><div id="ordersTop"></div><label>Default Status</label><select id="defaultStatusSel"><option value="SUCCESS">SUCCESS</option><option value="PENDING">PENDING</option><option value="FAILED">FAILED</option></select><button class="btn-green" onclick="saveOrderSettings()">SAVE ORDER SETTINGS</button></div>
+<!-- 17 -->
+<div class="card"><b>17. REASONS</b><label>Pending Reason</label><input id="pendingReasonInp"><label>Failed Reason</label><input id="failedReasonInp"><button class="btn-green" onclick="saveReasonSettings()">SAVE REASONS</button></div>
+<!-- 18 -->
+<div class="card"><b>18. ORDERS LIST</b><div id="ordersList"></div><button class="btn-red" onclick="clearOrders()">Clear All Orders</button></div>
+<!-- 19 -->
+<div class="card"><b>19. THEMES 20</b><div class="theme-grid" id="themeGrid"></div><button class="btn-green" onclick="saveTheme()">SAVE THEME</button></div>
+<!-- 20 -->
+<div class="card"><b>20. LOGO / CONTACT / ADDRESS</b><label>Logo Photo</label><input type="file" accept="image/*" onchange="saveLogo(event)"><label>Contact</label><input id="contactInp"><label>Address</label><input id="addressInp"><button class="btn-green" onclick="saveContact()">SAVE</button></div>
+<!-- 21 -->
+<div class="card"><b>21. PAYMENT CHANNELS ON/OFF</b><div id="payToggles"></div><button class="btn-green" onclick="savePaymentSettings()">SAVE PAYMENT SETTINGS</button></div>
+<!-- 22 -->
+<div class="card"><b>22. FILTER + GAMES CONTROL</b><label>Filter Buttons - comma se alag likho</label><input id="filterInput" placeholder="All, PUBG, Free Fire..."><button class="btn-green" onclick="saveFilterSettings()">SAVE FILTERS</button><div id="gamesEditor"></div><button class="btn-green" onclick="addGame()">+ ADD NEW GAME</button></div>
+<!-- 23 -->
+<div class="card"><b>23. BACKUP</b><button class="btn-green" onclick="saveAll()">SAVE ALL</button><button onclick="exportBackup()">COPY BACKUP</button><textarea id="backupText" placeholder="Backup paste karo"></textarea><button onclick="importBackup()">PASTE BACKUP</button></div>
 </div>
 
-<div id="page3" style="display:none" class="glass"><h2 id="loadText">Connecting...</h2><div class="bar"><div id="loadBar"></div></div><p id="loadPct">0%</p><p id="queueText">Queue: 3 log aage hain...</p></div>
-<div id="page4" style="display:none" class="glass"><h1 id="resTitle">SUCCESS ✅</h1><p id="resReason"></p><p id="resOrder"></p><button class="btn" onclick="goPage(1)">BACK TO STORE</button><button class="btn" onclick="retryPay()" style="margin-top:8px;background:#333">RETRY</button></div>
+<!-- 24. PAGE 1 - GAME DETAIL -->
+<div id="overlayPage" style="display:none"><div class="pageBox">
+<div class="detail-topbar"><button onclick="backToPage1()">← Back</button><b id="detailTitle">PUBG</b></div>
+<div class="steps"><span class="active">1 Game</span><span>2 Payment</span><span>3 Loading</span><span>4 Result</span></div>
+<div class="detail-banner" id="detailBanner"><h3 id="detailBannerTxt">PUBG MEGA DEAL</h3></div>
+<div class="sold-wrap"><b>RECENTLY SOLD</b><div id="soldList"></div></div>
+<div class="search-player"><b>ENTER PLAYER ID</b><input id="uidInput" placeholder="UID likho"><button class="btn-green" onclick="verifyUid()">VERIFY ✅</button></div>
+<div class="verify-card" id="verifyCard" style="display:none"><b id="verifiedUserTxt">BINRAO / KALEOZ_122</b><br><small id="verifiedUidTxt"></small></div>
+<div class="packs-wrap"><b>SELECT PACK</b><div class="pack-grid" id="packsWrap"></div></div>
+<div class="trust-box">🛡️ 100% Trusted • Instant Delivery • Developed By Binrao</div>
+<button class="btn-green" onclick="goToPayment()">CONTINUE →</button>
+<button onclick="closeFlow()">Cancel</button>
+</div></div>
 
-<div id="pinBox"><div class="glass"><h3>🔐 ENTER PIN</h3><input id="pinInput" type="password" placeholder="PIN - 5425"><button class="btn" onclick="checkPin()">OPEN SETTINGS</button><button class="btn" onclick="closePin()" style="margin-top:8px;background:#333">CLOSE</button></div></div>
+<!-- 25. PAGE 2 - PAYMENT FIXED -->
+<div id="page2" style="display:none"><div class="pageBox">
+<div class="steps"><span>1 Game</span><span class="active">2 Payment</span><span>3 Loading</span><span>4 Result</span></div>
+<h3>Secure Payment</h3><div class="order-row" id="summaryBox"></div>
+<div><b>BINRAO Box</b><p>Fixed User: BINRAO / KALEOZ_122</p></div>
+<b>CHOOSE PAYMENT METHOD</b><div id="payOpts"></div>
+<div id="realCards"></div>
+<div id="appleBox" style="display:none">🍎 Apple Pay - Face ID se confirm karo</div>
+<div><b>Card Security Code CVC</b><input id="cvcInput" placeholder="CVC - 3 digit"></div>
+<button class="btn-green" onclick="goToLoading()">PAY NOW 💳</button>
+<button onclick="backToPage1()">Back</button>
+</div></div>
 
-<div id="settingsPanel">
-<h2>⚙️ HIDDEN SETTINGS</h2>
-<button class="btn" onclick="closeSettings()" style="background:#333">CLOSE ❌</button>
-<div class="glass"><b>🏪 STORE</b><label>Store Name</label><input id="sName"><label>Tagline</label><input id="sTag"><label>Logo URL</label><input id="sLogo"><label>Banner URL</label><input id="sBanner"><label>Contact</label><input id="sContact"><button class="btn" onclick="saveBasic()">SAVE STORE</button></div>
-<div class="glass"><b>🎨 THEMES - 20</b><div id="themeList"></div></div>
-<div class="glass"><b>🧾 ORDER</b><label>Default Status</label><select id="sStatus"><option>SUCCESS</option><option>PENDING</option><option>FAILED</option></select><label>Pending Reason</label><input id="sPending"><label>Failed Reason</label><input id="sFailed"><button class="btn" onclick="saveOrderSetting()">SAVE ORDER</button><div id="ordersList" style="margin-top:10px"></div><button class="btn" onclick="clearOrders()" style="margin-top:8px;background:red">CLEAR ALL ORDERS</button></div>
-<div class="glass"><b>💳 PAYMENT ON/OFF</b><div id="payToggles"></div><button class="btn" onclick="savePayToggle()" style="margin-top:8px">SAVE PAYMENT</button></div>
-<div class="glass"><b>🔐 PIN CHANGE</b><input id="sPin" placeholder="Naya PIN"><button class="btn" onclick="changePin()">CHANGE PIN</button></div>
-<div class="glass"><b>🎮 GAMES CONTROL</b><div id="gamesControl"></div></div>
-<div class="glass"><b>💾 BACKUP</b><button class="btn" onclick="copyBackup()">COPY BACKUP</button><textarea id="backupText" placeholder="Backup yahan paste karo"></textarea><button class="btn" onclick="pasteBackup()">PASTE BACKUP</button></div>
-</div>
+<!-- 26. PAGE 3 - LOADING -->
+<div id="page3" style="display:none"><div class="pageBox">
+<div class="steps"><span>1 Game</span><span>2 Payment</span><span class="active">3 Loading</span><span>4 Result</span></div>
+<h3>Processing Payment</h3><p id="loadUidLine"></p><div class="bar"><div id="loadBar"></div></div><p id="loadPct">0%</p><p id="loadTxt">Connecting...</p>
+</div></div>
 
-<script src="games.js"></script>
-<script src="settings.js"></script>
+<!-- 27. PAGE 4 - RESULT -->
+<div id="page4" style="display:none"><div class="pageBox">
+<div class="steps"><span>1 Game</span><span>2 Payment</span><span>3 Loading</span><span class="active">4 Result</span></div>
+<div id="resultBox"><h2>TRANSACTION RESULT - VIP</h2><h1 id="resTitle">SUCCESS</h1><p id="resPack"></p><p id="resUid"></p><p id="resUser"></p><p id="resCard"></p><p id="resTime"></p><p id="resReason"></p></div>
+<button onclick="closeFlow()">Cancel</button><button class="btn-green" onclick="retryPay()">RETRY</button>
+</div></div>
+
+<!-- 28. POPUP F1 -->
+<div id="popupF1" style="display:none">Payment Has been Processing.</div>
+
+<!-- 29. PIN OVERLAY -->
+<div id="pinOverlay" style="display:none"><div class="pinBox"><h3>🔐 ADMIN PIN</h3><input id="pinInput" type="password" placeholder="PIN - 5425"><button class="btn-green" onclick="checkPin()">UNLOCK</button><button onclick="closePin()">Cancel</button></div></div>
+
+<!-- 30. FOOTER -->
+<div class="footer"><div class="foot-top" id="footerStore">LADLA GAME STORE</div><div class="pay">Supports: VISA / Mastercard / Apple Pay / USDT / Bitcoin</div><div class="contact-box" id="footerContact">Contact: - | Address: -</div><div class="bottom">Developed By Binrao • Terms Apply</div></div>
+
 <script src="app.js"></script>
 </body>
 </html>
