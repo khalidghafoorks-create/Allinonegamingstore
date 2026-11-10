@@ -4,78 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>LADLA DEAL STORE</title>
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon-512.png">
-<link rel="apple-touch-icon" href="./icon-512.png">
-<link rel="stylesheet" href="./style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="1">
-
 <button id="installBtn">📲 Install App</button>
+<div id="popup">Payment Has Been Processing...</div>
 
-<!-- HEADER - 3 CLICK SE PIN KHULEGA -->
 <div class="header" id="logoClickArea">
-<img id="storeLogo" src="./icon-512.png">
+<img id="storeLogo" src="icon-512.png">
 <div><b id="storeName">LADLA DEAL STORE</b><br><small id="storeTag">Instant UC • Diamonds • Coins</small></div>
 </div>
 
-<!-- PAGE 1 - GAME DETAIL -->
 <div id="page1">
-<div class="banner" id="mainBanner"><h2>🔥 MEGA DEAL - PUBG UC 🔥</h2><p>Sasta + Fast + Trusted</p></div>
+<div class="banner" id="mainBanner"><h2>🔥 MEGA DEAL 🔥</h2><p>Sasta + Fast + Trusted</p></div>
 <div class="glass"><b>🕒 RECENTLY SOLD</b><div id="soldList"></div></div>
-<div class="glass"><b>🎮 ENTER PLAYER ID</b><input id="uid" placeholder="PUBG UID likho"><button class="btn" onclick="verifyUID()">VERIFY UID ✅</button><div id="verifyResult"></div></div>
-<div class="glass"><b>💎 SELECT PACK</b><div id="packs"></div></div>
-<div class="glass" style="text-align:center"><b>🛡️ 100% TRUSTED</b><br><small id="footerContact">Developed By Binrao</small></div>
+<div class="glass"><b>🎮 ALL GAMES</b><div class="game-grid" id="gameList"></div></div>
+<div class="glass" id="gameDetail" style="display:none">
+<div style="display:flex;gap:10px;align-items:center"><img id="detailIcon" style="width:55px;height:55px;border-radius:12px"><div><b id="detailName">PUBG</b><br><small id="detailCoin">UC</small></div><button onclick="backToGames()" style="margin-left:auto;background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px">Back</button></div>
+<div style="margin-top:12px"><b>🎮 ENTER PLAYER ID</b><input id="uid" placeholder="UID likho"><button class="btn" onclick="verifyUID()">VERIFY UID ✅</button><div id="verifyResult"></div></div>
+<b>💎 CHOTA PACK</b><div id="smallPacks"></div>
+<b>🔥 BADA PACK - 25K SE 200K</b><div id="packs"></div>
+</div>
+<div class="glass" style="text-align:center"><b>🛡️ 100% TRUSTED</b><br><small>Payment: Card • Apple Pay • USDT • Bitcoin</small><br><small>Developed By Binrao</small></div>
 </div>
 
-<!-- PAGE 2 - PAYMENT -->
 <div id="page2" style="display:none">
 <div class="glass"><b>🧾 ORDER DETAIL</b><div id="orderInfo"></div></div>
 <div class="glass"><b>💳 PAYMENT METHOD</b><div id="payMethods"></div></div>
-<div class="glass" id="cardBox"><b>CARD DETAIL</b><input id="cardNo" placeholder="Card Number"><input id="cardExp" placeholder="MM/YY"><input id="cardCVC" placeholder="CVC"><button class="btn" onclick="startPay()">PAY NOW</button></div>
-<div class="glass" id="cryptoBox" style="display:none"><b id="cryptoTitle">USDT / BITCOIN</b><p id="cryptoAddr">Address yahan aayega</p><button class="btn" onclick="startPay()">I HAVE SENT ✅</button></div>
+<div class="glass" id="cardBox"><b>CARD DETAIL</b><input id="cardNo" placeholder="Card Number"><input id="cardExp" placeholder="MM/YY"><input id="cardCVC" placeholder="CVC"><button class="btn" onclick="startPay()">PAY NOW 💳</button></div>
+<div class="glass" id="cryptoBox" style="display:none"><b id="cryptoTitle">USDT</b><p id="cryptoAddr"></p><button class="btn" onclick="startPay()">I HAVE SENT ✅</button></div>
+<button class="btn" onclick="goPage(1)" style="margin-top:10px;background:#333">BACK</button>
 </div>
 
-<!-- PAGE 3 - LOADING -->
-<div id="page3" style="display:none" class="glass" >
-<h2 id="loadText">Connecting...</h2><div class="bar"><div id="loadBar"></div></div><p id="loadPct">0%</p><p id="queueText">Queue: 2 log aage hain...</p>
-</div>
+<div id="page3" style="display:none" class="glass"><h2 id="loadText">Connecting...</h2><div class="bar"><div id="loadBar"></div></div><p id="loadPct">0%</p><p id="queueText">Queue: 3 log aage hain...</p></div>
+<div id="page4" style="display:none" class="glass"><h1 id="resTitle">SUCCESS ✅</h1><p id="resReason"></p><p id="resOrder"></p><button class="btn" onclick="goPage(1)">BACK TO STORE</button><button class="btn" onclick="retryPay()" style="margin-top:8px;background:#333">RETRY</button></div>
 
-<!-- PAGE 4 - RESULT -->
-<div id="page4" style="display:none" class="glass">
-<h1 id="resTitle">SUCCESS ✅</h1><p id="resReason"></p><p id="resOrder"></p>
-<button class="btn" onclick="goPage(1)">BACK TO STORE</button>
-<button class="btn" onclick="retryPay()" style="margin-top:8px">RETRY</button>
-</div>
+<div id="pinBox"><div class="glass"><h3>🔐 ENTER PIN</h3><input id="pinInput" type="password" placeholder="PIN - 5425"><button class="btn" onclick="checkPin()">OPEN SETTINGS</button><button class="btn" onclick="closePin()" style="margin-top:8px;background:#333">CLOSE</button></div></div>
 
-<!-- POPUP -->
-<div id="popup" style="display:none">Payment Has Been Processing... 3 sec</div>
-
-<!-- HIDDEN SETTINGS -->
-<div id="settingsPanel" style="display:none">
+<div id="settingsPanel">
 <h2>⚙️ HIDDEN SETTINGS</h2>
-<label>Store Name</label><input id="sName"><label>Tagline</label><input id="sTag">
-<label>Banner Image URL</label><input id="sBanner"><button class="btn" onclick="saveSettings()">SAVE ALL</button>
-<label>Logo URL</label><input id="sLogo"><label>Contact</label><input id="sContact">
-<label>Default Status</label><select id="sStatus"><option>SUCCESS</option><option>PENDING</option><option>FAILED</option></select>
-<label>Pending Reason</label><input id="sPending"><label>Failed Reason</label><input id="sFailed">
-<div id="payToggles"></div>
-<label>PIN Change</label><input id="sPin" placeholder="New PIN">
-<button class="btn" onclick="saveSettings()">SAVE ALL + BACKUP</button>
-<button class="btn" onclick="copyBackup()">COPY BACKUP</button>
-<textarea id="backupText" placeholder="Backup yahan paste karo"></textarea>
-<button class="btn" onclick="pasteBackup()">PASTE BACKUP</button>
-<button class="btn" onclick="clearOrders()">CLEAR ALL ORDERS</button>
-<div id="ordersList"></div>
+<button class="btn" onclick="closeSettings()" style="background:#333">CLOSE ❌</button>
+<div class="glass"><b>🏪 STORE</b><label>Store Name</label><input id="sName"><label>Tagline</label><input id="sTag"><label>Logo URL</label><input id="sLogo"><label>Banner URL</label><input id="sBanner"><label>Contact</label><input id="sContact"><button class="btn" onclick="saveBasic()">SAVE STORE</button></div>
+<div class="glass"><b>🎨 THEMES - 20</b><div id="themeList"></div></div>
+<div class="glass"><b>🧾 ORDER</b><label>Default Status</label><select id="sStatus"><option>SUCCESS</option><option>PENDING</option><option>FAILED</option></select><label>Pending Reason</label><input id="sPending"><label>Failed Reason</label><input id="sFailed"><button class="btn" onclick="saveOrderSetting()">SAVE ORDER</button><div id="ordersList" style="margin-top:10px"></div><button class="btn" onclick="clearOrders()" style="margin-top:8px;background:red">CLEAR ALL ORDERS</button></div>
+<div class="glass"><b>💳 PAYMENT ON/OFF</b><div id="payToggles"></div><button class="btn" onclick="savePayToggle()" style="margin-top:8px">SAVE PAYMENT</button></div>
+<div class="glass"><b>🔐 PIN CHANGE</b><input id="sPin" placeholder="Naya PIN"><button class="btn" onclick="changePin()">CHANGE PIN</button></div>
+<div class="glass"><b>🎮 GAMES CONTROL</b><div id="gamesControl"></div></div>
+<div class="glass"><b>💾 BACKUP</b><button class="btn" onclick="copyBackup()">COPY BACKUP</button><textarea id="backupText" placeholder="Backup yahan paste karo"></textarea><button class="btn" onclick="pasteBackup()">PASTE BACKUP</button></div>
 </div>
 
-<!-- PIN OVERLAY -->
-<div id="pinBox" style="display:none" class="glass">
-<h3>ENTER PIN</h3><input id="pinInput" type="password" placeholder="PIN"><button class="btn" onclick="checkPin()">OPEN</button>
-</div>
-
-<script src="./packs.js"></script>
-<script src="./settings.js"></script>
-<script src="./app.js"></script>
+<script src="games.js"></script>
+<script src="settings.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
