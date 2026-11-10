@@ -1,0 +1,99 @@
+<!-- LADLA GAME STORE V2 - FINAL FIXED - NO BUG -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LADLA GAME STORE</title>
+
+<!-- PWA - CHROME INSTALL -->
+<link rel="manifest" href="./manifest.json">
+<meta id="metaTheme" name="theme-color" content="#0a0014">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icon-512.png">
+<link rel="icon" href="./icon-512.png">
+
+<style>
+*{box-sizing:border-box}
+:root{ --bg:#0a0014; --accent:#a855f7; --glow:0 0 25px #a855f7; }
+/* 20 THEMES - ALL FIXED */
+body[data-theme="1"]{ --bg:#0a0014; --accent:#a855f7; --glow:0 0 25px #a855f7; }
+body[data-theme="2"]{ --bg:#02120a; --accent:#00ff88; --glow:0 0 25px #00ff88; }
+body[data-theme="3"]{ --bg:#120d00; --accent:#f5c518; --glow:0 0 25px #f5c518; }
+body[data-theme="4"]{ --bg:#140000; --accent:#ff2222; --glow:0 0 25px #ff2222; }
+body[data-theme="5"]{ --bg:#000a1a; --accent:#00cfff; --glow:0 0 25px #00cfff; }
+body[data-theme="6"]{ --bg:#14000f; --accent:#ff2d95; --glow:0 0 25px #ff2d95; }
+body[data-theme="7"]{ --bg:#150a00; --accent:#ff7a00; --glow:0 0 25px #ff7a00; }
+body[data-theme="8"]{ --bg:#000814; --accent:#2563eb; --glow:0 0 25px #2563eb; }
+body[data-theme="9"]{ --bg:#02120c; --accent:#10b981; --glow:0 0 25px #10b981; }
+body[data-theme="10"]{ --bg:#0a0a0a; --accent:#c0c0c0; --glow:0 0 25px #c0c0c0; }
+body[data-theme="11"]{ --bg:#1a0000; --accent:#8b0000; --glow:0 0 25px #ff0000; }
+body[data-theme="12"]{ --bg:#0f001a; --accent:#d4af37; --glow:0 0 25px #d4af37; }
+body[data-theme="13"]{ --bg:#000000; --accent:#ffffff; --glow:0 0 18px #ffffff; }
+body[data-theme="14"]{ --bg:#1a0012; --accent:#ff1493; --glow:0 0 25px #ff1493; }
+body[data-theme="15"]{ --bg:#021a00; --accent:#00c853; --glow:0 0 25px #00c853; }
+body[data-theme="16"]{ --bg:#0f0c00; --accent:#ffb800; --glow:0 0 25px #ffb800; }
+body[data-theme="17"]{ --bg:#120e00; --accent:#ffea00; --glow:0 0 25px #ffea00; }
+body[data-theme="18"]{ --bg:#000000; --accent:#25f4ee; --glow:0 0 25px #25f4ee; }
+body[data-theme="19"]{ --bg:#120a00; --accent:#f7931a; --glow:0 0 25px #f7931a; }
+body[data-theme="20"]{ --bg:#f8f9fa; --accent:#007bff; --glow:0 0 25px #007bff; }
+body[data-theme="20"]{ color:#111; }
+
+body{ background:var(--bg); color:#fff; font-family:Arial, sans-serif; margin:0; transition:0.3s; }
+.glass{ background:rgba(255,255,255,0.08); border:1px solid var(--accent); box-shadow:var(--glow); border-radius:18px; }
+.btn{ background:var(--accent); box-shadow:var(--glow); color:#fff; padding:14px; border-radius:12px; border:none; width:100%; font-weight:800; cursor:pointer; }
+#installBtn{ display:none; position:fixed; bottom:80px; right:12px; z-index:999; background:var(--accent); color:#fff; padding:10px 16px; border-radius:20px; font-weight:800; border:none; box-shadow:var(--glow); }
+#iosTip{ display:none; position:fixed; bottom:80px; left:12px; right:12px; z-index:999; background:#111; border:1px solid var(--accent); padding:12px; border-radius:12px; font-size:13px; text-align:center; }
+</style>
+</head>
+<body data-theme="1">
+
+<button id="installBtn">📲 Install App</button>
+<div id="iosTip">iPhone pe Install ke liye: Share button dabao -> <b>Add to Home Screen</b> dabao</div>
+
+<script>
+// FIXED - THEME + META COLOR DONO UPDATE HONGE
+function applyTheme(n){
+  n = String(n);
+  document.body.dataset.theme = n;
+  try{ localStorage.setItem('ladla_theme', n); }catch(e){}
+  // Chrome top bar ka colour bhi theme jaisa
+  var colors = {"1":"#0a0014","2":"#02120a","3":"#120d00","4":"#140000","5":"#000a1a","6":"#14000f","7":"#150a00","8":"#000814","9":"#02120c","10":"#0a0a0a","11":"#1a0000","12":"#0f001a","13":"#000000","14":"#1a0012","15":"#021a00","16":"#0f0c00","17":"#120e00","18":"#000000","19":"#120a00","20":"#f8f9fa"};
+  var m = document.getElementById('metaTheme');
+  if(m && colors[n]) m.setAttribute('content', colors[n]);
+}
+try{
+  var savedTheme = localStorage.getItem('ladla_theme') || "1";
+  applyTheme(savedTheme);
+}catch(e){ applyTheme("1"); }
+
+// FIXED - CHROME INSTALL
+let deferredPrompt = null;
+var installBtn = document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+});
+installBtn.onclick = async function(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  var choice = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBtn.style.display = 'none';
+};
+window.addEventListener('appinstalled', function(){
+  installBtn.style.display = 'none';
+  deferredPrompt = null;
+});
+// FIXED - IPHONE KE LIYE TIP
+var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+if(isIOS && !isStandalone){
+  document.getElementById('iosTip').style.display = 'block';
+}
+</script>
+</body>
+</html>
